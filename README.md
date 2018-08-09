@@ -138,16 +138,15 @@ hadoop@ubuntu:/opt/hadoop/hadoop/logs$ cat hadoop-hadoop-datanode-ubuntu.log
 Report
 ======
 ```buildoutcfg
-hadoop@ubuntu:/opt/hadoop/hadoop/logs$ hadoop dfsadmin -report
-
+hadoop@ubuntu:/opt/hadoop/hadoop/etc/hadoop$ hadoop dfsadmin -report
 DEPRECATED: Use of this script to execute hdfs command is deprecated.
 Instead use the hdfs command for it.
 
-18/08/09 20:49:16 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-Configured Capacity: 126692069376 (117.99 GB)
-Present Capacity: 84559462400 (78.75 GB)
-DFS Remaining: 84559429632 (78.75 GB)
-DFS Used: 32768 (32 KB)
+18/08/09 21:44:16 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Configured Capacity: 143467098112 (133.61 GB)
+Present Capacity: 90619625472 (84.40 GB)
+DFS Remaining: 90619559936 (84.40 GB)
+DFS Used: 65536 (64 KB)
 DFS Used%: 0.00%
 Under replicated blocks: 0
 Blocks with corrupt replicas: 0
@@ -155,15 +154,15 @@ Missing blocks: 0
 Missing blocks (with replication factor 1): 0
 
 -------------------------------------------------
-Live datanodes (1):
+Live datanodes (2):
 
-Name: 192.168.37.134:50010 (master)
+Name: 192.168.37.134:50010 (192.168.37.134)
 Hostname: ubuntu
 Decommission Status : Normal
 Configured Capacity: 126692069376 (117.99 GB)
 DFS Used: 32768 (32 KB)
-Non DFS Used: 42132606976 (39.24 GB)
-DFS Remaining: 84559429632 (78.75 GB)
+Non DFS Used: 42141716480 (39.25 GB)
+DFS Remaining: 84550320128 (78.74 GB)
 DFS Used%: 0.00%
 DFS Remaining%: 66.74%
 Configured Cache Capacity: 0 (0 B)
@@ -172,8 +171,23 @@ Cache Remaining: 0 (0 B)
 Cache Used%: 100.00%
 Cache Remaining%: 0.00%
 Xceivers: 1
-Last contact: Thu Aug 09 20:49:17 AEST 2018
+Last contact: Thu Aug 09 21:44:15 AEST 2018
 
+
+Name: 192.168.37.135:50010 (192.168.37.135)
+Hostname: ubuntu
+Decommission Status : Normal
+Configured Capacity: 16775028736 (15.62 GB)
+DFS Used: 32768 (32 KB)
+Non DFS Used: 10705756160 (9.97 GB)
+DFS Remaining: 6069239808 (5.65 GB)
+DFS Used%: 0.00%
+DFS Remaining%: 36.18%
+Configured Cache Capacity: 0 (0 B)
+Cache Used: 0 (0 B)
+Cache Remaining: 0 (0 B)
+Cache Used%: 100.00%
+Cache Remaining%: 0.00%
+Xceivers: 1
+Last contact: Thu Aug 09 21:44:16 AEST 2018
 ```
-
-
