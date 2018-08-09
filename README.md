@@ -3,8 +3,10 @@ Practical Data Science with Hadoop and Spark
 
 Configuration
 ========
-* Ubuntu Linux 16.0.4 - Master
+* Ubuntu Linux 16.0.4 - Master 
+     > Assume IP address = 192.168.37.134
 * Ubuntu Linux 16.0.4 - Slaves
+     > Assume IP address = 192.168.37.135
 * Apache Hadoop 2.7.3
 * Apache Spark
 
@@ -21,6 +23,17 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.181-b13, mixed mode)
 
 ```
 
+Hosts File on Master 
+```
+lshang@ubuntu:~$ cat /etc/hosts
+127.0.0.1	localhost
+127.0.1.1	ubuntu
+
+192.168.37.134 master 
+192.168.37.135 slave01
+```
+
+
 SSH
 ```buildoutcfg
 hadoop@ubuntu:~$ ssh localhost
@@ -34,6 +47,19 @@ Welcome to Ubuntu 16.04.5 LTS (GNU/Linux 4.4.0-130-generic x86_64)
 0 updates are security updates.
 
 Last login: Thu Aug  9 04:22:31 2018 from 192.168.37.133
+```
+
+Slave Nodes
+-----------
+```buildoutcfg
+hadoop@ubuntu:/opt/hadoop/hadoop/etc/hadoop$ cat core-site.xml 
+<configuration>
+    <property>
+        <name>fs.default.name</name>
+        <value>hdfs://192.168.37.135:9000</value>
+    </property>
+</configuration>
+
 ```
 
 Node List
@@ -103,5 +129,51 @@ hadoop@ubuntu:/opt/hadoop/hadoop/sbin$ jps
 
 ```
 
+Logs
+====
+Slave: 
+
+hadoop@ubuntu:/opt/hadoop/hadoop/logs$ cat hadoop-hadoop-datanode-ubuntu.log
+
+Report
+======
+```buildoutcfg
+hadoop@ubuntu:/opt/hadoop/hadoop/logs$ hadoop dfsadmin -report
+
+DEPRECATED: Use of this script to execute hdfs command is deprecated.
+Instead use the hdfs command for it.
+
+18/08/09 20:49:16 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Configured Capacity: 126692069376 (117.99 GB)
+Present Capacity: 84559462400 (78.75 GB)
+DFS Remaining: 84559429632 (78.75 GB)
+DFS Used: 32768 (32 KB)
+DFS Used%: 0.00%
+Under replicated blocks: 0
+Blocks with corrupt replicas: 0
+Missing blocks: 0
+Missing blocks (with replication factor 1): 0
+
+-------------------------------------------------
+Live datanodes (1):
+
+Name: 192.168.37.134:50010 (master)
+Hostname: ubuntu
+Decommission Status : Normal
+Configured Capacity: 126692069376 (117.99 GB)
+DFS Used: 32768 (32 KB)
+Non DFS Used: 42132606976 (39.24 GB)
+DFS Remaining: 84559429632 (78.75 GB)
+DFS Used%: 0.00%
+DFS Remaining%: 66.74%
+Configured Cache Capacity: 0 (0 B)
+Cache Used: 0 (0 B)
+Cache Remaining: 0 (0 B)
+Cache Used%: 100.00%
+Cache Remaining%: 0.00%
+Xceivers: 1
+Last contact: Thu Aug 09 20:49:17 AEST 2018
+
+```
 
 
