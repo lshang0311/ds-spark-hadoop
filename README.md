@@ -5,6 +5,9 @@ Table of Contents
  * [Configuration](#configuration)
  * [Verify the Cluster Settings](#cluster-settings)
  * [Launch Hadoop Cluster](#launch-hadoop-cluster)
+ * [Report](#report)
+ * [Spark](#spark)
+ * [Examples](#examples)
 
 
 # <a name="configuration"></a>Configuration
@@ -13,9 +16,14 @@ Table of Contents
        lshang@ubuntu:~$ hostname -I
        192.168.37.134
 * Ubuntu Linux 16.0.4 - Slaves
-     > 
+     >  slave01
+
        lshang@ubuntu:~$ hostname -I
-       192.168.37.135 
+       192.168.37.135
+
+     > slave02
+       TODO
+
 * Apache Hadoop 2.7.3
 * Apache Spark
 
@@ -190,7 +198,7 @@ Slave:
 
 hadoop@ubuntu:/opt/hadoop/hadoop/logs$ cat hadoop-hadoop-datanode-ubuntu.log
 
-## Report
+# <a name="report"></a>Report
 ```buildoutcfg
 hadoop@ubuntu:/opt/hadoop/hadoop/etc/hadoop$ hadoop dfsadmin -report
 DEPRECATED: Use of this script to execute hdfs command is deprecated.
@@ -244,4 +252,39 @@ Cache Used%: 100.00%
 Cache Remaining%: 0.00%
 Xceivers: 1
 Last contact: Thu Aug 09 21:44:16 AEST 2018
+```
+
+# <a name="spark"></a>Spark
+```
+export SPARK_HOME=/home/lshang/Downloads/spark-2.3.1-bin-hadoop2.7
+export set JAVA_OPTS="-Xmx9G -XX:MaxPermSize=2G -XX:+UseCompressedOops -XX:MaxMetaspaceSize=512m"
+$SPARK_HOME/bin/pyspark --packages databricks:spark-deep-learning:1.1.0-spark2.3-s_2.11 --driver-memory 5g
+```
+For more, see
+[Spark Deep Learning](https://github.com/lshang0311/spark-deep-learning)
+
+# <a name="examples"></a>Examples
+Simple examples to get started.
+
+* CompyFromLocal
+
+```
+hadoop@ubuntu:~$ hadoop fs -mkdir /user
+hadoop@ubuntu:~$ hadoop fs -ls /
+Found 1 items
+drwxr-xr-x   - hadoop supergroup          0 2018-08-10 14:32 /user
+
+hadoop@ubuntu:~$ hadoop fs -copyFromLocal -f test.csv /user/test.csv
+hadoop@ubuntu:~$ hadoop fs -ls /user
+Found 1 items
+-rw-r--r--   1 hadoop supergroup          8 2018-08-10 14:34 /user/test.csv
+```
+
+* put
+```
+hadoop@ubuntu:~$ hadoop fs -mkdir /user/analyst
+hadoop@ubuntu:~$ hadoop fs -put /home/lshang/Downloads/shakespeare.txt /user/analyst/shakespeare.txt
+hadoop@ubuntu:~$ hadoop fs -ls /user/analyst
+Found 1 items
+-rw-r--r--   1 hadoop supergroup    8877968 2018-08-10 15:31 /user/analyst/shakespeare.txt
 ```
