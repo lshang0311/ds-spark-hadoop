@@ -2,8 +2,9 @@
 Practical Data Science with Hadoop and Spark
 
 - [Configuration](#heading)
+- [Report](#heading)
 
-## Configuration
+# Configuration
 
 * Ubuntu Linux 16.0.4 - Master 
      > 
@@ -188,8 +189,7 @@ Slave:
 
 hadoop@ubuntu:/opt/hadoop/hadoop/logs$ cat hadoop-hadoop-datanode-ubuntu.log
 
-Report
-======
+# Report
 ```buildoutcfg
 hadoop@ubuntu:/opt/hadoop/hadoop/etc/hadoop$ hadoop dfsadmin -report
 DEPRECATED: Use of this script to execute hdfs command is deprecated.
