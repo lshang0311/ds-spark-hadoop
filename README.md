@@ -1,12 +1,18 @@
 # ds-spark-hadoop
 Practical Data Science with Hadoop and Spark
 
-Configuration
-========
+- [Configuration](#heading)
+
+## Configuration
+
 * Ubuntu Linux 16.0.4 - Master 
-     > Assume IP address = 192.168.37.134
+     > 
+       lshang@ubuntu:~$ hostname -I
+       192.168.37.134
 * Ubuntu Linux 16.0.4 - Slaves
-     > Assume IP address = 192.168.37.135
+     > 
+       lshang@ubuntu:~$ hostname -I
+       192.168.37.135 
 * Apache Hadoop 2.7.3
 * Apache Spark
 
@@ -26,40 +32,88 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.181-b13, mixed mode)
 Hosts File on Master 
 ```
 lshang@ubuntu:~$ cat /etc/hosts
-127.0.0.1	localhost
-127.0.1.1	ubuntu
-
+...
 192.168.37.134 master 
 192.168.37.135 slave01
+...
 ```
 
+Node List
+```
+hadoop@ubuntu:~$ cat /opt/hadoop/hadoop/etc/hadoop/masters 
+192.168.37.134
+hadoop@ubuntu:~$ cat /opt/hadoop/hadoop/etc/hadoop/slaves 
+192.168.37.135
+```
 
 SSH
 ```buildoutcfg
-hadoop@ubuntu:~$ ssh localhost
+Passwordless to Master
+hadoop@ubuntu:~$ ssh master
 Welcome to Ubuntu 16.04.5 LTS (GNU/Linux 4.4.0-130-generic x86_64)
+...
+Last login: Fri Aug 10 09:48:59 2018 from 192.168.37.134
 
- * Documentation:  https://help.ubuntu.com
- * Management:     https://landscape.canonical.com
- * Support:        https://ubuntu.com/advantage
+hadoop@ubuntu:~$ exit
+logout
+Connection to master closed.
+```
 
-17 packages can be updated.
-0 updates are security updates.
+```buildoutcfg
+Passwordless to Slaves
+hadoop@ubuntu:~$ ssh slave01
+Welcome to Ubuntu 16.04.1 LTS (GNU/Linux 4.4.0-127-generic x86_64)
+...
+Last login: Fri Aug 10 09:49:09 2018 from 192.168.37.134
 
-Last login: Thu Aug  9 04:22:31 2018 from 192.168.37.133
+hadoop@ubuntu:~$ exit
+logout
+Connection to slave01 closed.
+hadoop@ubuntu:~$ 
 ```
 
 Slave Nodes
 -----------
+profile
+```buildoutcfg
+hadoop@ubuntu:~$ cat /etc/profile
+...
+
+### HADOOP Variables ###
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre
+export HADOOP_HOME=/opt/hadoop/hadoop
+export HADOOP_INSTALL=/opt/hadoop/hadoop
+export HADOOP_MAPRED_HOME=/opt/hadoop/hadoop
+export HADOOP_COMMON_HOME=/opt/hadoop/hadoop
+export HADOOP_HDFS_HOME=/opt/hadoop/hadoop
+export HADOOP_COMMON_LIB_NATIVE_DIR=/opt/hadoop/hadoop/lib/native
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/opt/hadoop/hadoop/sbin:/opt/hadoop/hadoop/bin
+```
+
+bashrc
+```buildoutcfg
+hadoop@ubuntu:~$ cat ~/.bashrc 
+...
+
+export HADOOP_INSTALL=$HADOOP_HOME
+export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_HOME
+export YARN_HOME=$HADOOP_HOME
+export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
+export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
+hadoop@ubuntu:~$ 
+```
+
+core-site.xml
 ```buildoutcfg
 hadoop@ubuntu:/opt/hadoop/hadoop/etc/hadoop$ cat core-site.xml 
 <configuration>
     <property>
         <name>fs.default.name</name>
-        <value>hdfs://192.168.37.135:9000</value>
+        <value>hdfs://192.168.37.134:9000</value>
     </property>
 </configuration>
-
 ```
 
 Node List
@@ -76,18 +130,8 @@ Hadoop 2.7.3
 ```
 
 ```buildoutcfg
-hadoop@ubuntu:~$ cat ~/.bashrc 
-...
-
-export HADOOP_INSTALL=$HADOOP_HOME
-export HADOOP_MAPRED_HOME=$HADOOP_HOME
-export HADOOP_COMMON_HOME=$HADOOP_HOME
-export HADOOP_HDFS_HOME=$HADOOP_HOME
-export YARN_HOME=$HADOOP_HOME
-export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
-export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
-hadoop@ubuntu:~$ 
-
+hadoop@ubuntu:~$ echo $HADOOP_HOME
+/opt/hadoop/hadoop
 ```
 
 ```
@@ -102,7 +146,7 @@ Services in the Browser
 
 Launch Hadoop Cluster
 =====================
-
+On Master Node
 ```buildoutcfg
 lshang@ubuntu:~$ su - hadoop
 Password: 
@@ -127,6 +171,15 @@ hadoop@ubuntu:/opt/hadoop/hadoop/sbin$ jps
 15914 SecondaryNameNode
 15566 NameNode
 
+```
+
+On Slave Node
+```buildoutcfg
+hadoop@ubuntu:~$ $HADOOP_HOME/sbin/hadoop-daemon.sh start datanode
+starting datanode, logging to /opt/hadoop/hadoop/logs/hadoop-hadoop-datanode-ubuntu.out
+hadoop@ubuntu:~$ jps
+55850 DataNode
+55930 Jps
 ```
 
 Logs
