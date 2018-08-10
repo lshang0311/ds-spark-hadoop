@@ -1,12 +1,14 @@
 # ds-spark-hadoop
 Practical Data Science with Hadoop and Spark
 
-- [Configuration](#heading)
-- [Report](#heading)
+Table of Contents
+ * [Configuration](#configuration)
+ * [Verify the Cluster Settings](#cluster-settings)
+ * [Launch Hadoop Cluster](#launch-hadoop-cluster)
 
-# Configuration
 
-* Ubuntu Linux 16.0.4 - Master 
+# <a name="configuration"></a>Configuration
+* Ubuntu Linux 16.0.4 - Master
      > 
        lshang@ubuntu:~$ hostname -I
        192.168.37.134
@@ -17,8 +19,8 @@ Practical Data Science with Hadoop and Spark
 * Apache Hadoop 2.7.3
 * Apache Spark
 
-Verify the Configuration of the MultiNode Hadoop 
-===================
+# <a name="cluster-settings"></a>Verify the Cluster Settings
+
 Master Node
 -----------
 Java 
@@ -145,8 +147,7 @@ Services in the Browser
 
 [NameNode](http://192.168.37.134:50070/dfshealth.html#tab-overview)
 
-Launch Hadoop Cluster
-=====================
+# <a name="launch-hadoop-cluster"></a>Launch Hadoop Cluster
 On Master Node
 ```buildoutcfg
 lshang@ubuntu:~$ su - hadoop
@@ -189,7 +190,7 @@ Slave:
 
 hadoop@ubuntu:/opt/hadoop/hadoop/logs$ cat hadoop-hadoop-datanode-ubuntu.log
 
-# Report
+## Report
 ```buildoutcfg
 hadoop@ubuntu:/opt/hadoop/hadoop/etc/hadoop$ hadoop dfsadmin -report
 DEPRECATED: Use of this script to execute hdfs command is deprecated.
