@@ -11,6 +11,14 @@ Table of Contents
 
 
 # <a name="configuration"></a>Configuration
+Installation guide:
+
+[How to Setup Hadoop 3.1](https://tecadmin.net/setup-hadoop-single-node-cluster-on-centos-redhat/)
+
+[Setup Hadoop 3.1.0 Single Node Cluster on Ubuntu 16.04](http://exabig.com/blog/2018/03/20/setup-hadoop-3-1-0-single-node-cluster-on-ubuntu-16-04/)
+
+[Hadoop 3 Single-Node Install Guide](http://tech.marksblogg.com/hadoop-3-single-node-install-guide.html)
+
 * Ubuntu Linux 16.0.4 - Master
      > 
        lshang@ubuntu:~$ hostname -I
