@@ -85,12 +85,6 @@ hadoop@ubuntu:~$ hadoop version
 Hadoop 3.1.0
 ```
 
-Services in the Browser
-
-[localhost:9870](localhost:9870)
-[localhost:8042](localhost:8042)
-[localhost:9864](localhost:9864)
-
 
 # <a name="launch-hadoop-cluster"></a>Launch or Stop Hadoop Cluster
 On Master Node
@@ -124,6 +118,15 @@ Stopping resourcemanager
 hadoop@ubuntu:~$ jps
 18734 Jps
 ```
+
+Services in the Browser
+
+[localhost:9870](localhost:9870)
+
+[localhost:8042](localhost:8042)
+
+[localhost:9864](localhost:9864)
+
 
 Logs
 ====
