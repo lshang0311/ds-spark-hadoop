@@ -104,6 +104,23 @@ hadoop@ubuntu:~$
 
 ```buildoutcfg
 hadoop@ubuntu:~$ start-dfs.sh
+```
+To fix the permission denied error:
+
+[Permission denied error while running start-dfs.sh](https://stackoverflow.com/questions/42756555/permission-denied-error-while-running-start-dfs-sh?rq=1)
+
+or
+```
+hadoop@ubuntu:~$ pdsh -q -w localhost
+...
+Rcmd type		ssh
+...
+```
+```
+export PDSH_RCMD_TYPE=ssh
+```
+
+```
 hadoop@ubuntu:~$ start-yarn.sh
 
 hadoop@ubuntu:~$ jps
