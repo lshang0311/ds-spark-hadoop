@@ -115,8 +115,7 @@ hadoop@ubuntu:~$ pdsh -q -w localhost
 ...
 Rcmd type		ssh
 ...
-```
-```
+
 export PDSH_RCMD_TYPE=ssh
 ```
 
