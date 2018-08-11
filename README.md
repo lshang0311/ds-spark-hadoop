@@ -19,11 +19,11 @@ Installation guide:
 
 [Hadoop 3 Single-Node Install Guide](http://tech.marksblogg.com/hadoop-3-single-node-install-guide.html)
 
-* Ubuntu Linux 16.0.4 - Master
+* Ubuntu Linux 16.04.1 - Master
      > 
        lshang@ubuntu:~$ hostname -I
        192.168.37.145
-* Ubuntu Linux 16.0.4 - Slaves
+* Slaves
      >  slave01
         TODO
 
@@ -211,31 +211,29 @@ For more, see
 # <a name="examples"></a>Examples
 Simple examples to get started.
 
-* CopyFromLocal
-
+* Put
 ```
-hadoop@ubuntu:~$ hadoop fs -mkdir /user
-hadoop@ubuntu:~$ hadoop fs -ls /
+hadoop@ubuntu:~$ hdfs dfs -mkdir /user/lshang
+hadoop@ubuntu:~$ hdfs dfs -ls /user
+Found 2 items
+drwxr-xr-x   - hadoop supergroup          0 2018-08-11 05:08 /user/lshang
+-rw-r--r--   1 hadoop supergroup         12 2018-08-10 10:54 /user/test.csv
+
+hadoop@ubuntu:~$ hdfs dfs -put test.csv /user/lshang/test.csv
+hadoop@ubuntu:~$ hdfs dfs -ls /user/lshang
 Found 1 items
-drwxr-xr-x   - hadoop supergroup          0 2018-08-10 14:32 /user
-
-hadoop@ubuntu:~$ hadoop fs -copyFromLocal -f test.csv /user/test.csv
-hadoop@ubuntu:~$ hadoop fs -ls /user
-Found 1 items
--rw-r--r--   1 hadoop supergroup          8 2018-08-10 14:34 /user/test.csv
+-rw-r--r--   1 hadoop supergroup         12 2018-08-11 05:09 /user/lshang/test.csv
 ```
 
-* put
+* [Word counting by MapReduce](https://hadoop.apache.org/docs/stable/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html)
 ```
-hadoop@ubuntu:~$ hadoop fs -mkdir /user/analyst
-hadoop@ubuntu:~$ hadoop fs -put /home/lshang/Downloads/shakespeare.txt /user/analyst/shakespeare.txt
-hadoop@ubuntu:~$ hadoop fs -ls /user/analyst
-Found 1 items
--rw-r--r--   1 hadoop supergroup    8877968 2018-08-10 15:31 /user/analyst/shakespeare.txt
-```
+hadoop@ubuntu:~$ echo $JAVA_HOME
+/usr/lib/jvm/java-8-oracle
 
-* word counting by MapReduce
-```
-hadoop@ubuntu:~$ export HADOOP_CLASSPATexport HADOOP_CLASSPATH=/usr/lib/jvm/java-8-openjdk-amd64/lib/tools.jar
-hadoop@ubuntu:~$ hadoop com.sun.tools.javac.Main
+hadoop@ubuntu:~$ export PATH=${JAVA_HOME}/bin:${PATH}
+hadoop@ubuntu:~$ export HADOOP_CLASSPATH=${JAVA_HOME}/lib/tools.jar
+
+hadoop@ubuntu:~$ $HADOOP_HOME/bin/hadoop com.sun.tools.javac.Main
+
+
 ```
