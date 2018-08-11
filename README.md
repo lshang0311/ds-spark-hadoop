@@ -84,7 +84,28 @@ hadoop@ubuntu:~$ cat /home/hadoop/hadoop-3.1.0/etc/hadoop/core-site.xml
  </property>
 </configuration>
 hadoop@ubuntu:~$
+```
 
+```buildoutcfg
+hadoop@ubuntu:~$ cat $HADOOP_HOME/etc/hadoop/mapred-site.xml
+<configuration>
+    <property>
+        <name>mapreduce.framework.name</name>
+        <value>yarn</value>
+    </property>
+    <property>
+        <name>yarn.app.mapreduce.am.env</name>
+        <value>HADOOP_MAPRED_HOME=${HADOOP_HOME}</value>
+    </property>
+    <property>
+        <name>mapreduce.map.env</name>
+        <value>HADOOP_MAPRED_HOME=${HADOOP_HOME}</value>
+    </property>
+    <property>
+        <name>mapreduce.reduce.env</name>
+        <value>HADOOP_MAPRED_HOME=${HADOOP_HOME}</value>
+    </property>
+</configuration>
 ```
 
 Hadoop
@@ -232,8 +253,68 @@ hadoop@ubuntu:~$ echo $JAVA_HOME
 
 hadoop@ubuntu:~$ export PATH=${JAVA_HOME}/bin:${PATH}
 hadoop@ubuntu:~$ export HADOOP_CLASSPATH=${JAVA_HOME}/lib/tools.jar
+```
 
-hadoop@ubuntu:~$ $HADOOP_HOME/bin/hadoop com.sun.tools.javac.Main
+```buildoutcfg
+hadoop@ubuntu:~$ cat WordCount.java 
+...
+public class WordCount {
 
+  public static class TokenizerMapper
+  ...
 
+  public static void main(String[] args) throws Exception {
+    Configuration conf = new Configuration();
+    ...
+  }
+}
+```
+
+```
+hadoop@ubuntu:~$ $HADOOP_HOME/bin/hadoop com.sun.tools.javac.Main WordCount.java 
+hadoop@ubuntu:~$ ls W* -lart
+-rw-rw-r-- 1 hadoop hadoop 2092 Aug 11 05:51 WordCount.java
+-rw-rw-r-- 1 hadoop hadoop 1736 Aug 11 05:53 WordCount$TokenizerMapper.class
+-rw-rw-r-- 1 hadoop hadoop 1739 Aug 11 05:53 WordCount$IntSumReducer.class
+-rw-rw-r-- 1 hadoop hadoop 1491 Aug 11 05:53 WordCount.class
+
+hadoop@ubuntu:~$ jar cf wc.jar WordCount*.class
+hadoop@ubuntu:~$ ls w*
+wc.jar
+```
+
+```buildoutcfg
+hadoop@ubuntu:~$ hdfs dfs -put file01.txt /user/lshang/wordcount/input/file01.txt
+hadoop@ubuntu:~$ hdfs dfs -put file02.txt /user/lshang/wordcount/input/file01.txt
+
+hadoop@ubuntu:~$ hdfs dfs -cat /user/lshang/wordcount/input/file01.txt
+Hello World Bye World
+hadoop@ubuntu:~$ hdfs dfs -cat /user/lshang/wordcount/input/file02.txt
+Hello Hadoop goodbye Hadoop
+```
+
+```
+hadoop@ubuntu:~$ hadoop jar wc.jar WordCount /user/lshang/wordcount/input /user/lshang/output
+...
+2018-08-11 07:32:29,364 INFO client.RMProxy: Connecting to ResourceManager at /0.0.0.0:8032
+2018-08-11 07:32:36,880 INFO mapreduce.Job:  map 0% reduce 0%
+2018-08-11 07:32:41,935 INFO mapreduce.Job:  map 100% reduce 0%
+2018-08-11 07:32:47,979 INFO mapreduce.Job:  map 100% reduce 100%
+2018-08-11 07:32:48,993 INFO mapreduce.Job: Job job_1533989259703_0010 completed successfully
+2018-08-11 07:32:49,068 INFO mapreduce.Job: Counters: 53
+...
+```
+
+```
+hadoop@ubuntu:~$ hdfs dfs -ls  /user/lshang/output
+Found 2 items
+-rw-r--r--   1 hadoop supergroup          0 2018-08-11 07:32 /user/lshang/output/_SUCCESS
+-rw-r--r--   1 hadoop supergroup         41 2018-08-11 07:32 /user/lshang/output/part-r-00000
+
+hadoop@ubuntu:~$ hdfs dfs -cat  /user/lshang/output/part-r-00000
+Bye	1
+Hadoop	2
+Hello	2
+World	2
+goodbye	1
 ```
