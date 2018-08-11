@@ -121,11 +121,11 @@ hadoop@ubuntu:~$ jps
 
 Services in the Browser
 
-[NameNode](localhost:9870)
+[NameNode](http://localhost:9870)
 
-[Cluster and Alll Applications](localhost:8042)
+[Cluster and Alll Applications](http://localhost:8042)
 
-[Hadoop Node Details](localhost:9864)
+[Hadoop Node Details](http://localhost:9864)
 
 
 Logs
