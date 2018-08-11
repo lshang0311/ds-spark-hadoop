@@ -4,7 +4,7 @@ Practical Data Science with Hadoop and Spark
 Table of Contents
  * [Configuration](#configuration)
  * [Verify the Cluster Settings](#cluster-settings)
- * [Launch or Hadoop Cluster](#launch-hadoop-cluster)
+ * [Launch or stop Hadoop Cluster](#launch-hadoop-cluster)
  * [Report](#report)
  * [Spark](#spark)
  * [Examples](#examples)
@@ -121,11 +121,11 @@ hadoop@ubuntu:~$ jps
 
 Services in the Browser
 
-[localhost:9870](localhost:9870)
+[NameNode](localhost:9870)
 
-[localhost:8042](localhost:8042)
+[Cluster and Alll Applications](localhost:8042)
 
-[localhost:9864](localhost:9864)
+[Hadoop Node Details](localhost:9864)
 
 
 Logs
