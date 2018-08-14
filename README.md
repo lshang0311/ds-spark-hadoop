@@ -380,9 +380,9 @@ World	2
 goodbye	1
 ```
 
-* [Hadoop Streaming](https://github.com/bbengfort/hadoop-fundamentals/tree/master/streaming)
+* [Hadoop Streaming - find average flight delay](https://github.com/bbengfort/hadoop-fundamentals/tree/master/streaming)
 
-Find average flight delay
+Use pipe to test mapper and reducer
 ```
 hadoop@ubuntu:~$ pwd
 /home/hadoop
