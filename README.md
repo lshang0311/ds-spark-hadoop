@@ -13,9 +13,11 @@ Table of Contents
 # <a name="configuration"></a>Configuration
 Installation guide:
 
-[How to Setup Hadoop 3.1](https://tecadmin.net/setup-hadoop-single-node-cluster-on-centos-redhat/)
-
 [Setup Hadoop 3.1.0 Single Node Cluster on Ubuntu 16.04](http://exabig.com/blog/2018/03/20/setup-hadoop-3-1-0-single-node-cluster-on-ubuntu-16-04/)
+
+also see:
+
+[How to Setup Hadoop 3.1](https://tecadmin.net/setup-hadoop-single-node-cluster-on-centos-redhat/)
 
 [Hadoop 3 Single-Node Install Guide](http://tech.marksblogg.com/hadoop-3-single-node-install-guide.html)
 
@@ -28,7 +30,7 @@ Installation guide:
         TODO
 
 
-* Apache Hadoop 3.1.0
+* Apache Hadoop 3.1.1
 * Apache Spark
 
 # <a name="cluster-settings"></a>Verify the Cluster Settings
@@ -70,6 +72,14 @@ export HADOOP_HDFS_HOME=${HADOOP_HOME}
 export YARN_HOME=${HADOOP_HOME}
 ```
 
+hadoop-env.sh
+```
+hadoop@ubuntu:~$ cat hadoop-3.1.1/etc/hadoop/hadoop-env.sh
+...
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+...
+```
+
 core-site.xml
 ```buildoutcfg
 hadoop@ubuntu:~$ cat /home/hadoop/hadoop-3.1.0/etc/hadoop/core-site.xml
@@ -86,6 +96,28 @@ hadoop@ubuntu:~$ cat /home/hadoop/hadoop-3.1.0/etc/hadoop/core-site.xml
 hadoop@ubuntu:~$
 ```
 
+hdfs-site.xml
+```buildoutcfg
+hadoop@ubuntu:~$ cat /home/hadoop/hadoop-3.1.1/etc/hadoop/hdfs-site.xml 
+<configuration>
+<property>
+ <name>dfs.replication</name>
+ <value>1</value>
+</property>
+
+<property>
+  <name>dfs.name.dir</name>
+    <value>file:///home/hadoop/hadoopdata/hdfs/namenode</value>
+</property>
+
+<property>
+  <name>dfs.data.dir</name>
+    <value>file:///home/hadoop/hadoopdata/hdfs/datanode</value>
+</property>
+</configuration>
+```
+
+mapred-site.xml
 ```buildoutcfg
 hadoop@ubuntu:~$ cat $HADOOP_HOME/etc/hadoop/mapred-site.xml
 <configuration>
@@ -106,6 +138,22 @@ hadoop@ubuntu:~$ cat $HADOOP_HOME/etc/hadoop/mapred-site.xml
         <value>HADOOP_MAPRED_HOME=${HADOOP_HOME}</value>
     </property>
 </configuration>
+```
+
+yarn-site.xml
+```buildoutcfg
+hadoop@ubuntu:~$ cat /home/hadoop/hadoop-3.1.1/etc/hadoop/yarn-site.xml 
+<configuration>
+ <property>
+   <name>yarn.nodemanager.aux-services</name>
+   <value>mapreduce_shuffle</value>
+ </property>
+ <property>
+   <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
+   <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+ </property>
+</configuration>
+
 ```
 
 Hadoop
@@ -134,10 +182,19 @@ or
 ```
 hadoop@ubuntu:~$ pdsh -q -w localhost
 ...
+Rcmd type		rsh
+...
+```
+
+rsh -> ssh
+```
+hadoop@ubuntu:~$ export PDSH_RCMD_TYPE=ssh
+
+hadoop@ubuntu:~$ pdsh -q -w localhost
+...
 Rcmd type		ssh
 ...
 
-export PDSH_RCMD_TYPE=ssh
 ```
 
 ```
@@ -317,4 +374,19 @@ Hadoop	2
 Hello	2
 World	2
 goodbye	1
+```
+
+* [Hadoop Streaming](https://github.com/bbengfort/hadoop-fundamentals/tree/master/streaming)
+
+Find average flight delay
+```
+hadoop@ubuntu:~/work.github/ds-spark-hadoop$ cat ./mapreduce/flights.csv | ./mapreduce/mapper.py | sort | ./mapreduce/reducer.py
+JFK	3.0
+LAX	6.0
+```
+
+```buildoutcfg
+hadoop@ubuntu:~$ hadoop jar /home/hadoop/hadoop-3.1.0/share/hadoop/tools/lib/hadoop-streaming-*.jar -input flights.csv -output average_delay -mapper mapper.py -reducer reducer.py -file mapper.py -file reducer.py 
+
+hadoop@ubuntu:~$ hdfs dfs -cat /user/hadoop/average_delay3/part-00000
 ```
