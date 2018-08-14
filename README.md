@@ -178,8 +178,12 @@ To fix the permission denied error:
 
 [Permission denied error while running start-dfs.sh](https://stackoverflow.com/questions/42756555/permission-denied-error-while-running-start-dfs-sh?rq=1)
 
-or
+```bash
+echo "ssh" | sudo tee /etc/pdsh/rcmd_default
 ```
+
+or 
+```bash
 hadoop@ubuntu:~$ pdsh -q -w localhost
 ...
 Rcmd type		rsh
@@ -225,7 +229,7 @@ Services in the Browser
 
 [NameNode](http://localhost:9870)
 
-[Cluster and Alll Applications](http://localhost:8042)
+[Cluster and All Applications](http://localhost:8042)
 
 [Hadoop Node Details](http://localhost:9864)
 
@@ -380,13 +384,40 @@ goodbye	1
 
 Find average flight delay
 ```
-hadoop@ubuntu:~/work.github/ds-spark-hadoop$ cat ./mapreduce/flights.csv | ./mapreduce/mapper.py | sort | ./mapreduce/reducer.py
+hadoop@ubuntu:~$ pwd
+/home/hadoop
+hadoop@ubuntu:~$ cat work.github/ds-spark-hadoop/mapreduce/flights.csv | ./work.github/ds-spark-hadoop/mapreduce/mapper.py | sort | ./work.github/ds-spark-hadoop/mapreduce/reducer.py 
 JFK	3.0
 LAX	6.0
 ```
 
-```buildoutcfg
-hadoop@ubuntu:~$ hadoop jar /home/hadoop/hadoop-3.1.0/share/hadoop/tools/lib/hadoop-streaming-*.jar -input flights.csv -output average_delay -mapper mapper.py -reducer reducer.py -file mapper.py -file reducer.py 
+Execute the job
+```
+hadoop@ubuntu:~/work.github/ds-spark-hadoop/mapreduce$ hdfs dfs -mkdir /user 
+hadoop@ubuntu:~/work.github/ds-spark-hadoop/mapreduce$ hdfs dfs -mkdir /user/hadoop 
+```
 
-hadoop@ubuntu:~$ hdfs dfs -cat /user/hadoop/average_delay3/part-00000
+```
+hadoop@ubuntu:~/work.github/ds-spark-hadoop/mapreduce$ ls flights.csv -lart
+-rw-r--r-- 1 lshang lshang 321 Aug 12 20:26 flights.csv
+
+hadoop@ubuntu:~/work.github/ds-spark-hadoop/mapreduce$ hdfs dfs -put flights.csv /user/hadoop/flights.csv
+```
+
+```
+hadoop@ubuntu:~/work.github/ds-spark-hadoop/mapreduce$ hadoop jar /home/hadoop/hadoop-3.1.1/share/hadoop/tools/lib/hadoop-streaming-*.jar -input flights.csv -output average_delay -mapper mapper.py -reducer reducer.py -file mapper.py -file reducer.py 
+...
+2018-08-14 22:06:49,676 INFO mapreduce.Job:  map 0% reduce 0%
+2018-08-14 22:06:59,792 INFO mapreduce.Job:  map 100% reduce 0%
+2018-08-14 22:07:03,821 INFO mapreduce.Job:  map 100% reduce 100%
+2018-08-14 22:07:04,832 INFO mapreduce.Job: Job job_1534247413800_0002 completed successfully
+2018-08-14 22:07:04,904 INFO mapreduce.Job: Counters: 54
+...
+2018-08-14 22:07:04,905 INFO streaming.StreamJob: Output directory: average_delay
+```
+
+```
+hadoop@ubuntu:~/work.github/ds-spark-hadoop/mapreduce$ hdfs dfs -cat /user/hadoop/average_delay/part-00000
+JFK	3.0
+LAX	6.0
 ```
