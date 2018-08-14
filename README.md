@@ -63,7 +63,7 @@ bashrc
 hadoop@ubuntu:~$ cat ~/.bashrc 
 ...
 
-export HADOOP_HOME="/home/hadoop/hadoop-3.1.0"
+export HADOOP_HOME=/home/hadoop/hadoop-3.1.1
 export PATH=$PATH:$HADOOP_HOME/bin
 export PATH=$PATH:$HADOOP_HOME/sbin
 export HADOOP_MAPRED_HOME=${HADOOP_HOME}
