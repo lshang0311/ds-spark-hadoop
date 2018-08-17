@@ -18,3 +18,10 @@ region = ap-southeast-2
 output = json
 ```
 
+```commandline
+lshang@ubuntu:~$ cat ~/.aws/credentials 
+[default]
+aws_access_key_id = XXXYYYZZZ 
+aws_secret_access_key = ZZZYYYXXX 
+```
+
