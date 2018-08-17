@@ -421,3 +421,28 @@ hadoop@ubuntu:~/work.github/ds-spark-hadoop/mapreduce$ hdfs dfs -cat /user/hadoo
 JFK	3.0
 LAX	6.0
 ```
+
+* spark-shell
+```commandline
+lshang@ubuntu:~$ pwd
+/home/lshang
+
+lshang@ubuntu:~$ wget -O ~/Downloads/baby_names.csv https://health.data.ny.gov/api/views/jxy9-yhdk/rows.csv?accessType=DOWNLOAD
+
+lshang@ubuntu:~$ ls ~/Downloads/ba* -lart
+-rw-rw-r-- 1 lshang lshang 5657962 Aug 17 22:46 /home/lshang/Downloads/babyNames.csv
+```
+
+```commandline
+lshang@ubuntu:~$ export SPARK_HOME=/home/lshang/Downloads/spark-2.3.1-bin-hadoop2.7
+lshang@ubuntu:~$ export set JAVA_OPTS="-Xmx9G -XX:MaxPermSize=2G -XX:+UseCompressedOops -XX:MaxMetaspaceSize=512m"
+lshang@ubuntu:~$ spark-shell
+
+scala> sc
+res0: org.apache.spark.SparkContext = org.apache.spark.SparkContext@2a5c6b76
+
+scala> val babyNames = sc.textFile("/home/lshang/Downloads/baby_names.csv")
+
+scala> babyNames.count
+res1: Long = 235511
+```
