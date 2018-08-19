@@ -1,6 +1,13 @@
 # Apache Spark: Example of Transformations
 
 ```commandline
+lshang@ubuntu:~$ wget -O ~/Downloads/baby_names.csv https://health.data.ny.gov/api/views/jxy9-yhdk/rows.csv?accessType=DOWNLOAD
+
+lshang@ubuntu:~$ ls ~/Downloads/ba* -lart
+-rw-rw-r-- 1 lshang lshang 5657962 Aug 17 22:46 /home/lshang/Downloads/babyNames.csv
+```
+
+```commandline
 lshang@ubuntu:~$ export SPARK_HOME=/home/lshang/Downloads/spark-2.3.1-bin-hadoop2.7
 lshang@ubuntu:~$ export set JAVA_OPTS="-Xmx9G -XX:MaxPermSize=2G -XX:+UseCompressedOops -XX:MaxMetaspaceSize=512m"
 lshang@ubuntu:~$ spark-shell
