@@ -30,6 +30,3 @@ abe
 scala> names1.reduce((t1,t2) => t1 + ',' +  t2)
 res2: String = abe,apple,abby
 ```
-
-# Apache Spark Cluster - Run Standalone
-TODO
