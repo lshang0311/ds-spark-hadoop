@@ -7,6 +7,7 @@ Table of Contents
  * [Launch or stop Hadoop Cluster](#launch-hadoop-cluster)
  * [Report](#report)
  * [Spark](#spark)
+ * [Hive](#hive)
  * [Examples](#examples)
 
 
@@ -289,6 +290,80 @@ $SPARK_HOME/bin/pyspark --packages databricks:spark-deep-learning:1.1.0-spark2.3
 ```
 For more, see
 [Spark Deep Learning](https://github.com/lshang0311/spark-deep-learning)
+
+# <a name="hive"></a>Hive
+See [Installing Hive on Ubuntu 16.04](https://hadoop7.wordpress.com/2017/01/27/installing-hive-on-ubuntu-16-04/)
+
+```bash
+lshang@ubuntu:~$ cd Downloads/
+lshang@ubuntu:~/Downloads$ wget http://mirror.intergrid.com.au/apache/hive/hive-3.1.0/apache-hive-3.1.0-bin.tar.gz
+lshang@ubuntu:~/Downloads$ tar -xzf apache-hive-3.1.0-bin.tar.gz 
+lshang@ubuntu:~/Downloads$ sudo mv apache-hive-3.1.0-bin /usr/local/hive
+
+lshang@ubuntu:~/Downloads$ vi ~/.bashrc 
+lshang@ubuntu:~/Downloads$ su - hadoop
+hadoop@ubuntu:~$ cd
+hadoop@ubuntu:~$ vi .bashrc 
+hadoop@ubuntu:~$ source ~/.bashrc 
+hadoop@ubuntu:~$ echo $HIVE_HOME 
+/usr/local/hive
+hadoop@ubuntu:~$ exit
+```
+
+```bash
+lshang@ubuntu:~/Downloads$ cd /usr/local/hive/
+lshang@ubuntu:/usr/local/hive$ vi bin/hive-config.sh 
+(add export HADOOP_HOME=/home/hadoop/hadoop-3.1.1)
+```
+
+```bash
+lshang@ubuntu:/usr/local/hive/lib$ rm log4j-slf4j-impl-2.10.0.jar 
+```
+
+```bash
+lshang@ubuntu:/usr/local/hive/lib$ cd
+lshang@ubuntu:~$ su - hadoop
+hadoop@ubuntu:~$ stop-all.sh 
+hadoop@ubuntu:~$ jps
+7259 Jps
+
+
+hadoop@ubuntu:~$ start-dfs.sh
+Starting namenodes on [localhost]
+Starting datanodes
+Starting secondary namenodes [ubuntu]
+
+hadoop@ubuntu:~$ start-yarn.sh
+hadoop@ubuntu:~$ jps
+8592 Jps
+7600 DataNode
+7460 NameNode
+8090 ResourceManager
+7820 SecondaryNameNode
+8223 NodeManager
+```
+
+```bash
+hadoop@ubuntu:~$ hdfs dfs -mkdir -p /usr/hive/warehouse
+hadoop@ubuntu:~$ hdfs dfs -chmod 777 /usr/hive/warehouse
+```
+
+```bash
+hadoop@ubuntu:~$ schematool -initSchema -dbType derby
+...
+Initialization script completed
+schemaTool completed
+```
+
+```bash
+hadoop@ubuntu:~$ hive
+Hive Session ID = cbcaa11a-a9ef-4112-bc09-29bffc066b97
+
+Logging initialized using configuration in jar:file:/usr/local/hive/lib/hive-common-3.1.0.jar!/hive-log4j2.properties Async: true
+Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+Hive Session ID = fccc52c5-a74c-4016-83d0-eacfe8e08618
+hive> 
+```
 
 # <a name="examples"></a>Examples
 Simple examples to get started.
