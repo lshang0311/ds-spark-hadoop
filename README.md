@@ -389,10 +389,8 @@ Pi is roughly 3.1441342882685763
 Tracking URL from the output:
 http://ubuntu:8088/proxy/application_1534922875410_0002/
 
-```
-For more, see
+More examples:
 [Spark Deep Learning](https://github.com/lshang0311/spark-deep-learning)
-```
 
 # <a name="hive"></a>Hive
 See [Installing Hive on Ubuntu 16.04](https://hadoop7.wordpress.com/2017/01/27/installing-hive-on-ubuntu-16-04/)
