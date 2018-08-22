@@ -389,6 +389,28 @@ Pi is roughly 3.1441342882685763
 Tracking URL from the output:
 http://ubuntu:8088/proxy/application_1534922875410_0002/
 
+Spark Shell
+```bash
+cd /home/hadoop
+wget -O alice.txt https://www.gutenberg.org/files/11/11-0.txt
+hdfs dfs -mkdir /inputs
+hdfs dfs -put alice.txt /inputs
+
+
+hadoop@ubuntu:~$ spark-shell 
+scala> var input = sc.textFile("/inputs/alice.txt")
+input: org.apache.spark.rdd.RDD[String] = /inputs/alice.txt MapPartitionsRDD[5] at textFile at <console>:24
+
+scala> input.take(5).foreach(println)
+Project Gutenberg’s Alice’s Adventures in Wonderland, by Lewis Carroll          
+
+This eBook is for the use of anyone anywhere at no cost and with
+almost no restrictions whatsoever.  You may copy it, give it away or
+re-use it under the terms of the Project Gutenberg License included
+
+scala> input.filter(line => line.length()>0).count()
+res3: Long = 2791
+```
 More examples:
 [Spark Deep Learning](https://github.com/lshang0311/spark-deep-learning)
 
