@@ -5,6 +5,7 @@ lshang@ubuntu:~$ export SPARK_HOME=/home/lshang/Downloads/spark-2.3.1-bin-hadoop
 lshang@ubuntu:~$ export set JAVA_OPTS="-Xmx9G -XX:MaxPermSize=2G -XX:+UseCompressedOops -XX:MaxMetaspaceSize=512m"
 ```
 # Apache Spark Cluster - Running  a Spark Standalone Cluster
+Master
 ```commandline
 lshang@ubuntu:~/Downloads/spark-2.3.1-bin-hadoop2.7/sbin$ jps
 17856 Jps
@@ -30,6 +31,7 @@ URL:
 spark://ubuntu.localdomain:7077
 ```
 
+Slave
 ```commandline
 lshang@ubuntu:~/Downloads/spark-2.3.1-bin-hadoop2.7/sbin$ ./start-slave.sh spark://ubuntu.localdomain:7077
 
