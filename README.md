@@ -292,8 +292,8 @@ hadoop@ubuntu:~$ pwd
 /home/hadoop
 
 hadoop@ubuntu:~$ wget http://www.strategylions.com.au/mirror/spark/spark-2.3.1/spark-2.3.1-bin-hadoop2.7.tgz
-hadoop@ubuntu:~$ tar -xvf spark-2.2.0-bin-hadoop2.7.tgz
-hadoop@ubuntu:~$ mv spark-2.2.0-bin-hadoop2.7 spark
+hadoop@ubuntu:~$ tar -xvf spark-2.3.1-bin-hadoop2.7.tgz
+hadoop@ubuntu:~$ mv spark-2.3.1-bin-hadoop2.7 spark
 ```
 
 ```bash
