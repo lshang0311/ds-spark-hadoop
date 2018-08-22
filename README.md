@@ -283,13 +283,116 @@ Num of Blocks: 1
 ```
 
 # <a name="spark"></a>Spark
+Installation guide: 
+[Install, configure and run Spark on top of Hadoop YARN cluster ](https://www.linode.com/docs/databases/hadoop/install-configure-run-spark-on-top-of-hadoop-yarn-cluster/)
+
+```bash
+lshang@ubuntu:~$ su - hadoop
+hadoop@ubuntu:~$ pwd
+/home/hadoop
+
+hadoop@ubuntu:~$ wget http://www.strategylions.com.au/mirror/spark/spark-2.3.1/spark-2.3.1-bin-hadoop2.7.tgz
+hadoop@ubuntu:~$ tar -xvf spark-2.2.0-bin-hadoop2.7.tgz
+hadoop@ubuntu:~$ mv spark-2.2.0-bin-hadoop2.7 spark
 ```
-export SPARK_HOME=/home/lshang/Downloads/spark-2.3.1-bin-hadoop2.7
-export set JAVA_OPTS="-Xmx9G -XX:MaxPermSize=2G -XX:+UseCompressedOops -XX:MaxMetaspaceSize=512m"
-$SPARK_HOME/bin/pyspark --packages databricks:spark-deep-learning:1.1.0-spark2.3-s_2.11 --driver-memory 5g
+
+```bash
+hadoop@ubuntu:~$ cat /home/hadoop/.profile 
+...
+PATH=/home/hadoop/spark/bin:$PATH
+export HADOOP_CONF_DIR=/home/hadoop/hadoop/etc/hadoop
+export SPARK_HOME=/home/hadoop/spark
+export LD_LIBRARY_PATH=/home/hadoop/hadoop/lib/native:$LD_LIBRARY_PATH
+```
+
+```bash
+hadoop@ubuntu:~$ cat $SPARK_HOME/conf/spark-defaults.conf
+...
+spark.master                    yarn 
+# spark.eventLog.enabled           true
+# spark.eventLog.dir               hdfs://namenode:8021/directory
+# spark.serializer                 org.apache.spark.serializer.KryoSerializer
+spark.driver.memory             512m 
+spark.yarn.am.memory    	512m
+spark.executor.memory          	512m
+# spark.executor.extraJavaOptions  -XX:+PrintGCDetails -Dkey=value -Dnumbers="one two three"
+
+```
+
+Run the sample *Pi* calculation:
+```bash
+hadoop@ubuntu:~$ jps
+4349 Jps
+hadoop@ubuntu:~$ start-dfs.sh
+Starting namenodes on [localhost]
+Starting datanodes
+Starting secondary namenodes [ubuntu]
+
+hadoop@ubuntu:~$ jps
+4967 SecondaryNameNode
+5097 Jps
+4715 DataNode
+4573 NameNode
+
+hadoop@ubuntu:~$ start-yarn.sh
+Starting resourcemanager
+Starting nodemanagers
+
+hadoop@ubuntu:~$ jps
+5222 ResourceManager
+4967 SecondaryNameNode
+4715 DataNode
+5723 Jps
+5372 NodeManager
+4573 NameNode
+
+hadoop@ubuntu:~$ spark-submit --deploy-mode client --class org.apache.spark.examples.SparkPi $SPARK_HOME/examples/jars/spark-examples_2.11-2.3.1.jar 5
+2018-08-22 17:33:27 INFO  SparkContext:54 - Running Spark version 2.3.1
+2018-08-22 17:33:27 INFO  SparkContext:54 - Submitted application: Spark Pi
+...
+2018-08-22 17:33:30 WARN  Client:66 - Neither spark.yarn.jars nor spark.yarn.archive is set, falling back to uploading libraries under SPARK_HOME.
+2018-08-22 17:33:35 INFO  Client:54 - Uploading resource file:/tmp/spark-20a9ddc0-3be1-428a-9946-836e1f29b4ce/__spark_libs__5788829378263443340.zip -> hdfs://localhost:9000/user/hadoop/.sparkStaging/application_1534922875410_0002/__spark_libs__5788829378263443340.zip
+2018-08-22 17:33:39 INFO  Client:54 - Uploading resource file:/tmp/spark-20a9ddc0-3be1-428a-9946-836e1f29b4ce/__spark_conf__1519539049020280385.zip -> hdfs://localhost:9000/user/hadoop/.sparkStaging/application_1534922875410_0002/__spark_conf__.zip
+
+2018-08-22 17:33:39 INFO  Client:54 - Submitting application application_1534922875410_0002 to ResourceManager
+2018-08-22 17:33:39 INFO  YarnClientImpl:273 - Submitted application application_1534922875410_0002
+...
+2018-08-22 17:33:49 INFO  YarnClientSchedulerBackend:54 - Application application_1534922875410_0002 has started running.
+2018-08-22 17:33:49 INFO  Utils:54 - Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 44065.
+
+2018-08-22 17:33:56 INFO  SparkContext:54 - Starting job: reduce at SparkPi.scala:38
+
+2018-08-22 17:33:57 INFO  TaskSetManager:54 - Finished task 1.0 in stage 0.0 (TID 1) in 1028 ms on ubuntu (executor 1) (1/5)
+2018-08-22 17:33:57 INFO  TaskSetManager:54 - Starting task 3.0 in stage 0.0 (TID 3, ubuntu, executor 1, partition 3, PROCESS_LOCAL, 7864 bytes)
+2018-08-22 17:33:57 INFO  TaskSetManager:54 - Finished task 2.0 in stage 0.0 (TID 2) in 70 ms on ubuntu (executor 1) (2/5)
+2018-08-22 17:33:57 INFO  TaskSetManager:54 - Starting task 4.0 in stage 0.0 (TID 4, ubuntu, executor 2, partition 4, PROCESS_LOCAL, 7864 bytes)
+2018-08-22 17:33:57 INFO  TaskSetManager:54 - Finished task 0.0 in stage 0.0 (TID 0) in 1128 ms on ubuntu (executor 2) (3/5)
+2018-08-22 17:33:57 INFO  TaskSetManager:54 - Finished task 4.0 in stage 0.0 (TID 4) in 46 ms on ubuntu (executor 2) (4/5)
+2018-08-22 17:33:57 INFO  TaskSetManager:54 - Finished task 3.0 in stage 0.0 (TID 3) in 74 ms on ubuntu (executor 1) (5/5)
+2018-08-22 17:33:57 INFO  YarnScheduler:54 - Removed TaskSet 0.0, whose tasks have all completed, from pool 
+2018-08-22 17:33:57 INFO  DAGScheduler:54 - ResultStage 0 (reduce at SparkPi.scala:38) finished in 1.360 s
+2018-08-22 17:33:57 INFO  DAGScheduler:54 - Job 0 finished: reduce at SparkPi.scala:38, took 1.808750 s
+
+Pi is roughly 3.1441342882685763
+
+2018-08-22 17:33:58 INFO  YarnClientSchedulerBackend:54 - Stopped
+2018-08-22 17:33:58 INFO  MapOutputTrackerMasterEndpoint:54 - MapOutputTrackerMasterEndpoint stopped!
+2018-08-22 17:33:58 INFO  MemoryStore:54 - MemoryStore cleared
+2018-08-22 17:33:58 INFO  BlockManager:54 - BlockManager stopped
+2018-08-22 17:33:58 INFO  BlockManagerMaster:54 - BlockManagerMaster stopped
+2018-08-22 17:33:58 INFO  OutputCommitCoordinator$OutputCommitCoordinatorEndpoint:54 - OutputCommitCoordinator stopped!
+2018-08-22 17:33:58 INFO  SparkContext:54 - Successfully stopped SparkContext
+2018-08-22 17:33:58 INFO  ShutdownHookManager:54 - Shutdown hook called
+2018-08-22 17:33:58 INFO  ShutdownHookManager:54 - Deleting directory /tmp/spark-20a9ddc0-3be1-428a-9946-836e1f29b4ce
+2018-08-22 17:33:58 INFO  ShutdownHookManager:54 - Deleting directory /tmp/spark-b113a755-c3a7-4ad4-a398-4b3eb92b7a5d
+```
+Tracking URL from the output:
+http://ubuntu:8088/proxy/application_1534922875410_0002/
+
 ```
 For more, see
 [Spark Deep Learning](https://github.com/lshang0311/spark-deep-learning)
+```
 
 # <a name="hive"></a>Hive
 See [Installing Hive on Ubuntu 16.04](https://hadoop7.wordpress.com/2017/01/27/installing-hive-on-ubuntu-16-04/)
@@ -356,12 +459,12 @@ schemaTool completed
 ```
 
 ```bash
-hadoop@ubuntu:~$ hive
-Hive Session ID = cbcaa11a-a9ef-4112-bc09-29bffc066b97
+hadoop@ubuntu:~$ hive --service cli
 
-Logging initialized using configuration in jar:file:/usr/local/hive/lib/hive-common-3.1.0.jar!/hive-log4j2.properties Async: true
-Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
-Hive Session ID = fccc52c5-a74c-4016-83d0-eacfe8e08618
+hive> show tables;
+OK
+flights
+Time taken: 0.51 seconds, Fetched: 1 row(s)
 hive> 
 ```
 
