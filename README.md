@@ -474,7 +474,7 @@ drwxrwxr-x  2 hadoop hadoop 4096 Aug 23 09:54 log
 drwxr-xr-x 16 hadoop hadoop 4096 Aug 23 10:22 ..
 ```
 
-Add a hive-site.xml file to spark/conf which points the metastore_db: 
+Add a hive-site.xml file to spark/conf which points to the metastore_db: 
 ```bash
 hadoop@ubuntu:~$ cat /home/hadoop/spark/conf/hive-site.xml 
 <?xml version="1.0"?>
