@@ -710,6 +710,10 @@ Safe mode is OFF
 
 hadoop@ubuntu:~$ stop-all.sh 
 
+hadoop@ubuntu:~$ pwd
+/home/hadoop
+hadoop@ubuntu:~$ rm -rf metastore_db/
+
 hadoop@ubuntu:~$ schematool -initSchema -dbType derby
 ...
 Initialization script completed

@@ -58,6 +58,19 @@ OK
 
 Spark shell - load csv file from hdfs
 ```bash
+hadoop@ubuntu:~$ spark-shell --packages com.databricks:spark-csv_2.10:1.3.0
+Spark context Web UI available at http://xxx.xxx.xx.xxx:4040
+Spark context available as 'sc' (master = yarn, app id = application_1535009096477_0007).
+Spark session available as 'spark'.
+...
+Using Scala version 2.11.8 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_181)
+...
+
+scala> 
+```
+[Spark UI](localhost:4040)
+
+```bash
 scala> val sqlContext = new org.apache.spark.sql.SQLContext(sc)
 
 # namenode adress: localhost:9000
@@ -79,5 +92,4 @@ scala> input_df.show(10)
 | 0GQ|Inter Island Airw...|
 +----+--------------------+
 only showing top 10 rows
-
 ```
