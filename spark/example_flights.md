@@ -67,8 +67,9 @@ Using Scala version 2.11.8 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_181)
 ...
 
 scala> 
+
+# Check Spark UI on localhost:4040
 ```
-[Spark UI](localhost:4040)
 
 ```bash
 scala> val sqlContext = new org.apache.spark.sql.SQLContext(sc)
