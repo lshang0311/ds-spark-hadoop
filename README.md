@@ -418,74 +418,110 @@ More examples:
 See [Installing Hive on Ubuntu 16.04](https://hadoop7.wordpress.com/2017/01/27/installing-hive-on-ubuntu-16-04/)
 
 ```bash
-lshang@ubuntu:~$ cd Downloads/
-lshang@ubuntu:~/Downloads$ wget http://mirror.intergrid.com.au/apache/hive/hive-3.1.0/apache-hive-3.1.0-bin.tar.gz
-lshang@ubuntu:~/Downloads$ tar -xzf apache-hive-3.1.0-bin.tar.gz 
-lshang@ubuntu:~/Downloads$ sudo mv apache-hive-3.1.0-bin /usr/local/hive
+hadoop@ubuntu:~$ wget http://apache.mirror.amaze.com.au/hive/hive-2.3.3/apache-hive-2.3.3-bin.tar.gz
+hadoop@ubuntu:~$ tar -zxvf apache-hive-2.3.3-bin.tar.gz 
 
-lshang@ubuntu:~/Downloads$ vi ~/.bashrc 
-lshang@ubuntu:~/Downloads$ su - hadoop
-hadoop@ubuntu:~$ cd
-hadoop@ubuntu:~$ vi .bashrc 
+hadoop@ubuntu:~$ ln -s apache-hive-2.3.3-bin hive
+
+hadoop@ubuntu:~$ cat ~/.bashrc 
+...
+export HADOOP_HOME=/home/hadoop/hadoop-3.1.1
+export PATH=$PATH:$HADOOP_HOME/bin
+export PATH=$PATH:$HADOOP_HOME/sbin
+export HADOOP_MAPRED_HOME=${HADOOP_HOME}
+export HADOOP_COMMON_HOME=${HADOOP_HOME}
+export HADOOP_HDFS_HOME=${HADOOP_HOME}
+export YARN_HOME=${HADOOP_HOME}
+
+export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
+export YARN_CONF_DIR=$HADOOP_HOME/etc/hadoop
+
+# HIVE
+export HIVE_HOME=/home/hadoop/hive 
+export PATH=$PATH:$HIVE_HOME/bin
+```
+
 hadoop@ubuntu:~$ source ~/.bashrc 
 hadoop@ubuntu:~$ echo $HIVE_HOME 
-/usr/local/hive
-hadoop@ubuntu:~$ exit
-```
-
-```bash
-lshang@ubuntu:~/Downloads$ cd /usr/local/hive/
-lshang@ubuntu:/usr/local/hive$ vi bin/hive-config.sh 
-(add export HADOOP_HOME=/home/hadoop/hadoop-3.1.1)
-```
-
-```bash
-lshang@ubuntu:/usr/local/hive/lib$ rm log4j-slf4j-impl-2.10.0.jar 
-```
-
-```bash
-lshang@ubuntu:/usr/local/hive/lib$ cd
-lshang@ubuntu:~$ su - hadoop
-hadoop@ubuntu:~$ stop-all.sh 
-hadoop@ubuntu:~$ jps
-7259 Jps
-
-
-hadoop@ubuntu:~$ start-dfs.sh
-Starting namenodes on [localhost]
-Starting datanodes
-Starting secondary namenodes [ubuntu]
-
-hadoop@ubuntu:~$ start-yarn.sh
-hadoop@ubuntu:~$ jps
-8592 Jps
-7600 DataNode
-7460 NameNode
-8090 ResourceManager
-7820 SecondaryNameNode
-8223 NodeManager
-```
-
-```bash
-hadoop@ubuntu:~$ hdfs dfs -mkdir -p /usr/hive/warehouse
-hadoop@ubuntu:~$ hdfs dfs -chmod 777 /usr/hive/warehouse
-```
+/home/hadoop/hive
 
 ```bash
 hadoop@ubuntu:~$ schematool -initSchema -dbType derby
 ...
+Metastore connection URL:	 jdbc:derby:;databaseName=metastore_db;create=true
+Metastore Connection Driver :	 org.apache.derby.jdbc.EmbeddedDriver
+Metastore connection User:	 APP
+Starting metastore schema initialization to 2.3.0
+Initialization script hive-schema-2.3.0.derby.sql
 Initialization script completed
 schemaTool completed
 ```
 
 ```bash
-hadoop@ubuntu:~$ hive --service cli
+hadoop@ubuntu:~$ pwd
+/home/hadoop
+hadoop@ubuntu:~$ ls metastore_db/ -lart
+total 36
+-rw-rw-r--  1 hadoop hadoop  608 Aug 23 09:47 README_DO_NOT_TOUCH_FILES.txt
+-rw-rw-r--  1 hadoop hadoop  905 Aug 23 09:47 service.properties
+drwxrwxr-x  2 hadoop hadoop 4096 Aug 23 09:47 seg0
+drwxrwxr-x  2 hadoop hadoop 4096 Aug 23 09:54 tmp
+-rw-rw-r--  1 hadoop hadoop   38 Aug 23 09:54 db.lck
+-rw-rw-r--  1 hadoop hadoop    4 Aug 23 09:54 dbex.lck
+drwxrwxr-x  5 hadoop hadoop 4096 Aug 23 09:54 .
+drwxrwxr-x  2 hadoop hadoop 4096 Aug 23 09:54 log
+drwxr-xr-x 16 hadoop hadoop 4096 Aug 23 10:22 ..
+```
+
+Add a hive-site.xml file to spark/conf which points the metastore_db: 
+```bash
+hadoop@ubuntu:~$ cat /home/hadoop/spark/conf/hive-site.xml 
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+<property>
+  <name>javax.jdo.option.ConnectionURL</name>
+  <value>jdbc:derby:;databaseName=/home/hadoop/metastore_db;create=true</value>
+  <description>JDBC connect string for a JDBC metastore</description>
+</property>
+<property>
+  <name>javax.jdo.option.ConnectionDriverName</name>
+  <value>org.apache.derby.jdbc.EmbeddedDriver</value>
+</property>
+</configuration>
+```
+
+Start Hive:
+```bash
+hadoop@ubuntu:~$ hive
 
 hive> show tables;
 OK
-flights
-Time taken: 0.51 seconds, Fetched: 1 row(s)
-hive> 
+Time taken: 9.495 seconds
+hive> CREATE TABLE IF NOT EXISTS employee ( eid int, name String,
+    > salary String, destination String);
+OK
+Time taken: 0.834 seconds
+```
+
+Start spark-shell to read the tables from Hive:
+```bash
+scala> db.forehadoop@ubuntu:~$ spark-shell 
+...
+scala> import org.apache.spark.sql.hive.HiveContext
+import org.apache.spark.sql.hive.HiveContext
+
+scala> val sqlContext = new HiveContext(sc)
+
+scala> var db = sqlContext.sql("select * from employee")
+scala> db.count()
+res1: Long = 0                                                                  
+
+scala> db.describe()
+res3: org.apache.spark.sql.DataFrame = [summary: string, eid: string ... 3 more fields]
+
+scala> db.columns
+res5: Array[String] = Array(eid, name, salary, destination)
 ```
 
 # <a name="examples"></a>Examples
