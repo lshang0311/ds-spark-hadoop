@@ -94,3 +94,18 @@ scala> input_df.show(10)
 +----+--------------------+
 only showing top 10 rows
 ```
+
+Spark shell - load table from Hive 
+```bash
+scala> import org.apache.spark.sql.hive.HiveContext
+scala> val sqlContext = new HiveContext(sc)
+
+scala>  var db = sqlContext.sql("select * from airlines")
+db: org.apache.spark.sql.DataFrame = [code: string, description: string]
+
+scala> db.count()
+res1: Long = 1650                                                               
+
+scala> db.columns
+res2: Array[String] = Array(code, description)
+```
