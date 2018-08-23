@@ -440,10 +440,11 @@ export YARN_CONF_DIR=$HADOOP_HOME/etc/hadoop
 export HIVE_HOME=/home/hadoop/hive 
 export PATH=$PATH:$HIVE_HOME/bin
 ```
-
+```bash
 hadoop@ubuntu:~$ source ~/.bashrc 
 hadoop@ubuntu:~$ echo $HIVE_HOME 
 /home/hadoop/hive
+```
 
 ```bash
 hadoop@ubuntu:~$ schematool -initSchema -dbType derby
