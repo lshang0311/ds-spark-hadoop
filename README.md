@@ -9,6 +9,7 @@ Table of Contents
  * [Spark](#spark)
  * [Hive](#hive)
  * [Examples](#examples)
+ * [Issues and Solutions](#issues)
 
 
 # <a name="configuration"></a>Configuration
@@ -507,7 +508,7 @@ Time taken: 0.834 seconds
 
 Start spark-shell to read the tables from Hive:
 ```bash
-scala> db.forehadoop@ubuntu:~$ spark-shell 
+hadoop@ubuntu:~$ spark-shell 
 ...
 Spark context Web UI available at http://112.45.33.333:8040
 Spark context available as 'sc' (master = yarn, app id = application_1534942043176_0010).
@@ -685,4 +686,49 @@ scala> val babyNames = sc.textFile("/home/lshang/Downloads/baby_names.csv")
 
 scala> babyNames.count
 res1: Long = 235511
+```
+
+# <a name="issues"></a>Issues and Solutions
+* Error while starting Hive
+
+Error messages:
+```bash
+hadoop@ubuntu:~$ hive
+...
+Exception in thread "main" java.lang.RuntimeException: org.apache.hadoop.hdfs.server.namenode.SafeModeException: Cannot create directory /tmp/hive/hadoop/829bd39e-fb87-4056-8b74-8e46784ff36f. Name node is in safe mode.
+The reported blocks 19 has reached the threshold 0.9990 of total blocks 19. The number of live datanodes 1 has reached the minimum number 0. In safe mode extension. Safe mode will be turned off automatically in 4 seconds. NamenodeHostName:localhost
+	at org.apache.hadoop.io.retry.RetryInvocationHandler.invoke(RetryInvocationHandler.java:359)
+	at com.sun.proxy.$Proxy31.mkdirs(Unknown Source)
+	at org.apache.hadoop.hdfs.DFSClient.primitiveMkdir(DFSClient.java:2409)
+	... 18 more
+```
+
+Solution	
+```bash
+hadoop@ubuntu:~$ hdfs dfsadmin -safemode leave
+Safe mode is OFF
+
+hadoop@ubuntu:~$ stop-all.sh 
+
+hadoop@ubuntu:~$ schematool -initSchema -dbType derby
+...
+Initialization script completed
+schemaTool completed
+
+hadoop@ubuntu:~$ hive
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/home/hadoop/apache-hive-2.3.3-bin/lib/log4j-slf4j-impl-2.6.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/home/hadoop/hadoop-3.1.1/share/hadoop/common/lib/slf4j-log4j12-1.7.25.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+
+Logging initialized using configuration in jar:file:/home/hadoop/apache-hive-2.3.3-bin/lib/hive-common-2.3.3.jar!/hive-log4j2.properties Async: true
+Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+hive> show tables;
+OK
+Time taken: 3.699 seconds
+hive> show databases;
+OK
+default
+Time taken: 0.015 seconds, Fetched: 1 row(s)
 ```
