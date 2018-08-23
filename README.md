@@ -509,6 +509,11 @@ Start spark-shell to read the tables from Hive:
 ```bash
 scala> db.forehadoop@ubuntu:~$ spark-shell 
 ...
+Spark context Web UI available at http://112.45.33.333:8040
+Spark context available as 'sc' (master = yarn, app id = application_1534942043176_0010).
+Spark session available as 'spark'.
+...
+
 scala> import org.apache.spark.sql.hive.HiveContext
 import org.apache.spark.sql.hive.HiveContext
 
