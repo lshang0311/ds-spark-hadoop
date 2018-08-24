@@ -531,6 +531,35 @@ scala> db.columns
 res5: Array[String] = Array(eid, name, salary, destination)
 ```
 
+# <a name="pig"></a>Pig
+[Apache Pig Installation](https://www.edureka.co/blog/apache-pig-installation)
+
+Start Pig
+```bash
+hadoop@ubuntu:~$ mr-jobhistory-daemon.sh start historyserver
+hadoop@ubuntu:~$ pig
+...
+grunt> 
+```
+
+Load csv file
+```bash
+grunt> baby_names = load '/user/hadoop/inputs/baby_names.csv' using PigStorage(',');
+grunt> limit_data = LIMIT baby_names 10;
+grunt> dump limit_data;
+...
+(Year,First_Name,County,Sex,Count)
+(2013,GAVIN,ST LAWRENCE,M,9)
+(2013,LEVI,ST LAWRENCE,M,9)
+(2013,LOGAN,NEW YORK,M,44)
+(2013,HUDSON,NEW YORK,M,49)
+(2013,GABRIEL,NEW YORK,M,50)
+(2013,THEODORE,NEW YORK,M,51)
+(2013,ELIZA,KINGS,F,16)
+(2013,MADELEINE,KINGS,F,16)
+(2013,ZARA,KINGS,F,16)
+```
+
 # <a name="examples"></a>Examples
 Simple examples to get started.
 
