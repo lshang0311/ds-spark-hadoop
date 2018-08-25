@@ -1,6 +1,9 @@
 # Apache Spark Clusters
 
 ```commandline
+hadoop@ubuntu:~$ echo $SPARK_HOME 
+/home/hadoop/spark
+
 lshang@ubuntu:~$ export SPARK_HOME=/home/lshang/Downloads/spark-2.3.1-bin-hadoop2.7
 lshang@ubuntu:~$ export set JAVA_OPTS="-Xmx9G -XX:MaxPermSize=2G -XX:+UseCompressedOops -XX:MaxMetaspaceSize=512m"
 ```
@@ -69,5 +72,22 @@ Spark context available as 'sc' (master = spark://ubuntu:7077, app id = app-2018
 Spark session available as 'spark'.
 ...
 scala> 
+```
+
+Stop the Master and the Slave
+```bash
+hadoop@ubuntu:~$ jps
+6403 Master
+7780 Jps
+6790 Worker
+
+hadoop@ubuntu:~$ $SPARK_HOME/sbin/stop-master.sh 
+hadoop@ubuntu:~$ jps
+6790 Worker
+7817 Jps
+
+hadoop@ubuntu:~$ $SPARK_HOME/sbin/stop-slave.sh 
+hadoop@ubuntu:~$ jps
+7843 Jps
 ```
 
