@@ -31,7 +31,7 @@ Launch RStudio from localhost:8787 and  install SparkR
 install.packages("https://cran.r-project.org/src/contrib/Archive/SparkR/SparkR_2.3.0.tar.gz", repos = NULL, type="source")
 ```
 
-SparkR example: 
+SparkR example - glm 
 ```markdown
 Sys.setenv(HADOOP_CONF_DIR='/home/hadoop/hadoop/etc/hadoop')
 Sys.setenv(YARN_CONF_DIR='/home/hadoop/hadoop-3.1.1/etc/hadoop')
@@ -45,10 +45,34 @@ faithful_df_spark <- SparkR::as.DataFrame(faithful)
 head(faithful_df_spark)
 
 df <- as.DataFrame(iris)
-model <- glm(Sepal_Length ~  Sepal_Width + Species, data = df, family = "gaussianm")
+model <- glm(Sepal_Length ~  Sepal_Width + Species, data = df, family = "gaussian")
 
 summary(model)
 
 predictions <- predict(model, newData = df)
 head(select(predictions, "Sepal_Length", "prediction"))
+```
+
+SparkR example - [Naive Bayes](https://spark.apache.org/docs/latest/ml-classification-regression.html#naive-bayes)
+```markdown
+Sys.setenv(HADOOP_CONF_DIR='/home/hadoop/hadoop/etc/hadoop')
+Sys.setenv(YARN_CONF_DIR='/home/hadoop/hadoop-3.1.1/etc/hadoop')
+
+Sys.setenv(SPARK_HOME = "/home/hadoop/spark")
+library(SparkR, lib.loc = c(file.path(Sys.getenv("SPARK_HOME"), "R", "lib")))
+
+sparkR.session(master = "spark://ubuntu:7077", sparkHome = '/home/hadoop/spark', enableHiveSupport = FALSE)
+
+titanic <- as.data.frame(Titanic)
+titanicDF <- createDataFrame(titanic[titanic$Freq > 0, -5])
+nbDF <- titanicDF
+nbTestDF <- titanicDF
+nbModel <- spark.naiveBayes(nbDF, Survived ~ Class + Sex + Age)
+
+# Model summary
+summary(nbModel)
+
+# Prediction
+nbPredictions <- predict(nbModel, nbTestDF)
+head(nbPredictions)
 ```
