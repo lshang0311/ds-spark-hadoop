@@ -32,7 +32,12 @@ Restart the server
 lshang@ubuntu:~$ sudo /usr/sbin/rstudio-server restart
 ```
 
-Create a user (user name is **rstudio**), home directory and set password
+By default RStudio Server is running on 
+[localhost:8787](localhost:8787)  
+
+Use the user **hadoop** to login to the RStudio server or create a new user with a user name such as *rstudio**.
+
+Create a user with user name **rstudio** and the home directory and password for it
 ```commandline
 sudo useradd rstudio
 sudo mkdir /home/rstudio
@@ -40,9 +45,8 @@ sudo passwd rstudio
 sudo chmod -R 0777 /home/rstudio
 ```
 
-By default RStudio Server is running on [localhost:8787](localhost:8787)  
+login as **rstudio** or **hadoop**
 
-Logging as the user **rstudio** and install the package *sparklyr*
 ```commandline
 install.packages("sparklyr")
 ```
